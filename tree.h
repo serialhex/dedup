@@ -14,12 +14,27 @@ typedef struct Binary_Tree {
 } Binary_Tree;
 
 // a single node is a binary tree, just a lonly one. so this is simple.
-Binary_Tree* bt_make(File_Hash data) {
+Binary_Tree* bt_make() {
   Binary_Tree* tree = (Binary_Tree*)malloc(sizeof(Binary_Tree));
-  tree->data = data;
+  tree->data = null_file;
   tree->left = NULL;
   tree->right = NULL;
   tree->parent = NULL;
+  return tree;
+}
+
+// The beginning of the print functions
+void __print_binary_tree_helper(const Binary_Tree* tree, uint8_t depth);
+
+void print_binary_tree(const Binary_Tree* tree) {
+  printf("root:\n");
+  __print_binary_tree_helper(tree, 0);
+  printf("\n");
+}
+
+Binary_Tree* bt_init(File_Hash data) {
+  Binary_Tree* tree = bt_make();
+  tree->data = data;
   return tree;
 }
 
@@ -65,30 +80,22 @@ Binary_Tree* bt_find_last(Binary_Tree* tree, File_Hash* data) {
   return prev;
 }
 
-bool bt_add_child(Binary_Tree* parent, Binary_Tree* child) {
-  const hash_value phash = parent->data.hash;
-  const hash_value chash = child->data.hash;
-  if (chash < phash) {
-    parent->left = child;
-  } else if (chash > phash) {
-    parent->right = child;
-  } else {
-    printf("There's a child with the same hash already in the tree!!!\n");
-    print_file_hash(parent->data);
-    printf("\n");
-    print_file_hash(child->data);
-    printf("\n");
-    return false;
-  }
-  child->parent = parent;
-  return true;
-}
+// adding stuff to a binary tree
+bool __bt_add_child(Binary_Tree* parent, Binary_Tree* child);
 
 bool bt_add(Binary_Tree* tree, File_Hash* data) {
+  // check for fresh tree
+  if (files_eq(tree->data, null_file)) {
+    tree->data = *data;
+    return true;
+  }
+
   Binary_Tree* prev = bt_find_last(tree, data);
-  Binary_Tree* mew = bt_make(*data);
-  return bt_add_child(prev, mew);
+  Binary_Tree* mew = bt_init(*data);
+  return __bt_add_child(prev, mew);
 }
+
+// misc things down here
 
 void __ins_tabs(uint8_t tabs) {
   for (uint8_t i = 0; i < tabs; i++) {
@@ -120,8 +127,21 @@ void __print_binary_tree_helper(const Binary_Tree* tree, uint8_t depth) {
   }
 }
 
-void print_binary_tree(const Binary_Tree* tree) {
-  printf("root:\n");
-  __print_binary_tree_helper(tree, 0);
-  printf("\n");
+bool __bt_add_child(Binary_Tree* parent, Binary_Tree* child) {
+  const hash_value phash = parent->data.hash;
+  const hash_value chash = child->data.hash;
+  if (chash < phash) {
+    parent->left = child;
+  } else if (chash > phash) {
+    parent->right = child;
+  } else {
+    printf("There's a child with the same hash already in the tree!!!\n");
+    print_file_hash(parent->data);
+    printf("\n");
+    print_file_hash(child->data);
+    printf("\n");
+    return false;
+  }
+  child->parent = parent;
+  return true;
 }

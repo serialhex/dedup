@@ -16,10 +16,10 @@ typedef struct File_Hash {
   size_t filesize;
 } File_Hash;
 
-// const File_Hash null_file = { .filename = "",
-//                               .filepath = "",
-//                               .hash = 0,
-//                               .filesize = 0};
+const File_Hash null_file = { .filename = "",
+                              .filepath = "",
+                              .hash = 0,
+                              .filesize = 0};
 
 // 1KB: 1024
 // 1MB: 1048576
@@ -60,13 +60,17 @@ File_Hash hash_file(char* filename) {
   return hashdata;
 }
 
-// a check to see if two files may be equal, based on size and hash value
-bool files_eq(File_Hash one, File_Hash two) {
-  return (one.filesize == two.filesize) &&
-         (one.hash == two.hash);
-}
-
+// print filehash stuff
 void print_file_hash(File_Hash fhash) {
   printf("#File_Hash{.filepath \"%s\", .filename \"%s\", .filesize 0x%016I64X, .hash 0x%016I64X}",
     fhash.filepath, fhash.filename, fhash.filesize, fhash.hash);
 }
+
+// a check to see if two files may be equal, based on size and hash value
+bool files_eq(File_Hash one, File_Hash two) {
+  return (one.filesize == two.filesize) &&
+         (one.hash == two.hash) &&
+         (strcmp(one.filename, two.filename) == 0) &&
+         (strcmp(one.filepath, two.filepath) == 0);
+}
+
