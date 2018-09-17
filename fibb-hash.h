@@ -3,13 +3,23 @@
 #include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <stdbool.h>
 
-typedef struct {
+#pragma once
+
+typedef uint64_t hash_value;
+
+typedef struct File_Hash {
   char* filename;
   char* filepath;
-  uint64_t hash;
+  hash_value hash;
   size_t filesize;
 } File_Hash;
+
+// const File_Hash null_file = { .filename = "",
+//                               .filepath = "",
+//                               .hash = 0,
+//                               .filesize = 0};
 
 // 1KB: 1024
 // 1MB: 1048576
@@ -21,7 +31,7 @@ typedef struct {
 
 const uint64_t Fibb64 = 11400714819323198485llu;
 
-size_t fibbonacci_hash(size_t hash) {
+inline hash_value fibbonacci_hash(hash_value hash) {
   return hash * Fibb64;
 }
 
@@ -38,7 +48,7 @@ File_Hash hash_file(char* filename) {
       while (bytes_read) {
         hashdata.filesize += bytes_read;
         for(size_t i = 0; i < bytes_read; i++) {
-          hashdata.hash = (hashdata.hash + buffer[i]) * Fibb64;
+          hashdata.hash = fibbonacci_hash(hashdata.hash + buffer[i]);
         }
         bytes_read = fread(buffer, sizeof(uint8_t), BUFFER_SIZE, data);
       }
@@ -48,4 +58,15 @@ File_Hash hash_file(char* filename) {
   }
 
   return hashdata;
+}
+
+// a check to see if two files may be equal, based on size and hash value
+bool files_eq(File_Hash one, File_Hash two) {
+  return (one.filesize == two.filesize) &&
+         (one.hash == two.hash);
+}
+
+void print_file_hash(File_Hash fhash) {
+  printf("#File_Hash{.filepath \"%s\", .filename \"%s\", .filesize 0x%016I64X, .hash 0x%016I64X}",
+    fhash.filepath, fhash.filename, fhash.filesize, fhash.hash);
 }
