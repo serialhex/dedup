@@ -83,6 +83,7 @@ Binary_Tree* bt_find_last(Binary_Tree* tree, File_Hash* data) {
 // adding stuff to a binary tree
 bool __bt_add_child(Binary_Tree* parent, Binary_Tree* child);
 
+// see comment at __bt_add_child
 bool bt_add(Binary_Tree* tree, File_Hash* data) {
   // check for fresh tree
   if (files_eq(tree->data, null_file)) {
@@ -141,6 +142,7 @@ void print_dup(File_Hash parent, File_Hash child) {
   }
 }
 
+// Maybe I should add a check for the size, as the hash values may be the same...
 bool __bt_add_child(Binary_Tree* parent, Binary_Tree* child) {
   const hash_value phash = parent->data.hash;
   const hash_value chash = child->data.hash;

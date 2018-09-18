@@ -29,7 +29,7 @@ int main() {
   printf("Doing the find directory thing with a new tree.\n");
   Binary_Tree* new_tree = bt_make();
   find_directory(new_tree, ".");
-  print_binary_tree(new_tree);
+  // print_binary_tree(new_tree);
 
   return 0;
 }
@@ -86,6 +86,7 @@ static int find_directory(Binary_Tree* tree, const char *dirname) {
           /* Output file name with directory */
           // printf("dirname: %s, src: %s, buffer: ", dirname, p);
           // printf("%s\n", buffer);
+          printf(".");
           File_Hash* dedup = (File_Hash*)malloc(sizeof(File_Hash));
           *dedup = fh_init(dirname, p);
           bt_add(tree, dedup);
@@ -95,6 +96,7 @@ static int find_directory(Binary_Tree* tree, const char *dirname) {
           /* Scan sub-directory recursively */
           if (strcmp(ent->d_name, ".") != 0
               &&  strcmp(ent->d_name, "..") != 0) {
+            printf("\n");
             find_directory(tree, buffer);
           }
           break;

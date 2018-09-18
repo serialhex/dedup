@@ -30,10 +30,10 @@ const File_Hash null_file = { .filename = "",
 # define BUFFER_SIZE 16777216
 #endif
 
-const uint64_t Fibb64 = 11400714819323198485llu;
+const uint64_t Fib64 = 11400714819323198485llu;
 
-inline hash_value fibbonacci_hash(hash_value hash) {
-  return hash * Fibb64;
+inline hash_value fibonacci_hash(hash_value hash) {
+  return hash * Fib64;
 }
 
 File_Hash hash_file(File_Hash fhash);
@@ -60,7 +60,7 @@ File_Hash hash_file(File_Hash fhash) {
       while (bytes_read) {
         fhash.filesize += bytes_read;
         for(size_t i = 0; i < bytes_read; i++) {
-          fhash.hash = fibbonacci_hash(fhash.hash + buffer[i]);
+          fhash.hash = fibonacci_hash(fhash.hash + buffer[i]);
         }
         bytes_read = fread(buffer, sizeof(uint8_t), BUFFER_SIZE, data);
       }
