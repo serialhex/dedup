@@ -135,11 +135,10 @@ bool __bt_add_child(Binary_Tree* parent, Binary_Tree* child) {
   } else if (chash > phash) {
     parent->right = child;
   } else {
-    printf("There's a child with the same hash already in the tree!!!\n");
-    print_file_hash(parent->data);
-    printf("\n");
-    print_file_hash(child->data);
-    printf("\n");
+    fprintf(stderr,
+      "There's a child with the same hash already in the tree!!!\n%s\n%s\n",
+      str_file_hash(parent->data),
+      str_file_hash(child->data));
     return false;
   }
   child->parent = parent;

@@ -1,47 +1,48 @@
 #include <stdio.h>
+#include <string.h>
 #include "fibb-hash.h"
 #include "tree.h"
 #include "dirent.h"
 
-static int find_directory (const char *dirname);
+static int find_directory(Binary_Tree* tree, const char *dirname);
 
 int main() {
-  printf("Trying to hash a file\n");
-  Binary_Tree* tree = bt_make();
+  printf("Making a binary tree to keep some files in...\n");
+  // Binary_Tree* tree = bt_make();
 
-  printf("\n");
-  File_Hash dedup = hash_file("dedup.c");
-  bt_add(tree, &dedup);
-  print_binary_tree(tree);
+  // printf("\n");
+  // File_Hash dedup = fh_init(".", "dedup.c");
+  // bt_add(tree, &dedup);
+  // print_binary_tree(tree);
 
-  printf("\n");
-  File_Hash emty = hash_file("emty.file");
-  bt_add(tree, &emty);
-  print_binary_tree(tree);
+  // printf("\n");
+  // File_Hash emty = fh_init(".", "emty.file");
+  // bt_add(tree, &emty);
+  // print_binary_tree(tree);
 
-  printf("\n");
-  File_Hash big = hash_file("big-ass.file");
-  bt_add(tree, &big);
-  print_binary_tree(tree);
+  // printf("\n");
+  // File_Hash big = fh_init(".", "big-ass.file");
+  // bt_add(tree, &big);
+  // print_binary_tree(tree);
 
   printf("\n\n");
-  find_directory(".");
+  printf("Doing the find directory thing with a new tree.\n");
+  Binary_Tree* new_tree = bt_make();
+  find_directory(new_tree, ".");
+  print_binary_tree(new_tree);
 
   return 0;
 }
 
 
 // shamelessly stolen from the dirent example source code repo.
-static int find_directory(const char *dirname) {
+static int find_directory(Binary_Tree* tree, const char *dirname) {
   DIR *dir;
   char buffer[PATH_MAX + 2];
   char *p = buffer;
   const char *src;
   char *end = &buffer[PATH_MAX];
   int ok;
-
-  Binary_Tree* tree = bt_make();
-  File_Hash dedup;
 
   /* Copy directory name to buffer */
   src = dirname;
@@ -84,16 +85,18 @@ static int find_directory(const char *dirname) {
         case DT_LNK:
         case DT_REG:
           /* Output file name with directory */
+          // printf("dirname: %s, src: %s, buffer: ", dirname, p);
           // printf("%s\n", buffer);
-          dedup = hash_file(buffer);
-          bt_add(tree, &dedup);
+          File_Hash* dedup = (File_Hash*)malloc(sizeof(File_Hash));
+          *dedup = fh_init(dirname, p);
+          bt_add(tree, dedup);
           break;
 
         case DT_DIR:
           /* Scan sub-directory recursively */
           if (strcmp(ent->d_name, ".") != 0
               &&  strcmp(ent->d_name, "..") != 0) {
-            find_directory(buffer);
+            find_directory(tree, buffer);
           }
           break;
 
