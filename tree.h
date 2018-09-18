@@ -127,6 +127,20 @@ void __print_binary_tree_helper(const Binary_Tree* tree, uint8_t depth) {
   }
 }
 
+void print_dup(File_Hash parent, File_Hash child) {
+  FILE* file = fopen("dup-files.txt", "a");
+  if (file) {
+    fprintf(
+      file,
+      "\t-->\nfirst: %s\nsecond: %s\n\n",
+      str_file_hash(parent),
+      str_file_hash(child));
+    fclose(file);
+  } else {
+    fprintf(stderr, "Couldn't open \"dup-files.txt\" for some reason...\n");
+  }
+}
+
 bool __bt_add_child(Binary_Tree* parent, Binary_Tree* child) {
   const hash_value phash = parent->data.hash;
   const hash_value chash = child->data.hash;
@@ -135,6 +149,7 @@ bool __bt_add_child(Binary_Tree* parent, Binary_Tree* child) {
   } else if (chash > phash) {
     parent->right = child;
   } else {
+    print_dup(parent->data, child->data);
     fprintf(stderr,
       "There's a child with the same hash already in the tree!!!\n%s\n%s\n",
       str_file_hash(parent->data),

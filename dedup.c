@@ -34,7 +34,6 @@ int main() {
   return 0;
 }
 
-
 // shamelessly stolen from the dirent example source code repo.
 static int find_directory(Binary_Tree* tree, const char *dirname) {
   DIR *dir;
