@@ -1,3 +1,6 @@
+// The following is mostly from:
+// 21st Century C, 2nd Edition
+// by Ben Klemens
 
 #ifndef HAVE_ASPRINTF
 #define HAVE_ASPRINTF

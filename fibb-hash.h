@@ -83,6 +83,15 @@ char* str_file_hash(File_Hash fhash) {
   return str;
 }
 
+// a shorter string printing function.
+char* str_fhash(File_Hash fhash) {
+  char* s;
+  asprintf(&s,
+    "%s%s\n\t0x%016I64X:0x%016I64X\n",
+  fhash.filepath, fhash.filename, fhash.filesize, fhash.hash);
+  return s;
+}
+
 void print_file_hash(File_Hash fhash) {
   printf("%s", str_file_hash(fhash));
 }

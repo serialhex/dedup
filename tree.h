@@ -133,9 +133,9 @@ void print_dup(File_Hash parent, File_Hash child) {
   if (file) {
     fprintf(
       file,
-      "\t-->\nfirst: %s\nsecond: %s\n\n",
-      str_file_hash(parent),
-      str_file_hash(child));
+      "%s%s\n",
+      str_fhash(parent),
+      str_fhash(child));
     fclose(file);
   } else {
     fprintf(stderr, "Couldn't open \"dup-files.txt\" for some reason...\n");
